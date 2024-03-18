@@ -24,8 +24,6 @@ from gnuradio import iio
 from gnuradio import network
 from xmlrpc.server import SimpleXMLRPCServer
 import threading
-import osmosdr
-import time
 
 
 
@@ -65,24 +63,20 @@ class xml_test(gr.top_block):
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
         self.xmlrpc_server_0_thread.daemon = True
         self.xmlrpc_server_0_thread.start()
-        self.rtlsdr_source_0 = osmosdr.source(
-            args="numchan=" + str(1) + " " + 'str(grgsm.device.get_default_args(args))'
-        )
-        self.rtlsdr_source_0.set_sample_rate(samp_rate)
-        self.rtlsdr_source_0.set_center_freq(lop, 0)
-        self.rtlsdr_source_0.set_freq_corr(0, 0)
-        self.rtlsdr_source_0.set_dc_offset_mode(2, 0)
-        self.rtlsdr_source_0.set_iq_balance_mode(2, 0)
-        self.rtlsdr_source_0.set_gain_mode(False, 0)
-        self.rtlsdr_source_0.set_gain(gainp, 0)
-        self.rtlsdr_source_0.set_if_gain(20, 0)
-        self.rtlsdr_source_0.set_bb_gain(20, 0)
-        self.rtlsdr_source_0.set_antenna('', 0)
-        self.rtlsdr_source_0.set_bandwidth(samp_rate, 0)
         self.network_tcp_sink_3 = network.tcp_sink(gr.sizeof_float, 1, '127.0.0.1', 6001,2)
         self.network_tcp_sink_2 = network.tcp_sink(gr.sizeof_float, 1, '127.0.0.1', 6002,2)
         self.network_tcp_sink_1 = network.tcp_sink(gr.sizeof_gr_complex, 1, '127.0.0.1', 6003,2)
         self.network_tcp_sink_0 = network.tcp_sink(gr.sizeof_gr_complex, 1, '127.0.0.1', 6004,2)
+        self.iio_pluto_source_0 = iio.fmcomms2_source_fc32('ip:192.168.2.1' if 'ip:192.168.2.1' else iio.get_pluto_uri(), [True, True], 32768)
+        self.iio_pluto_source_0.set_len_tag_key('packet_len')
+        self.iio_pluto_source_0.set_frequency(lop)
+        self.iio_pluto_source_0.set_samplerate(samp_rate)
+        self.iio_pluto_source_0.set_gain_mode(0, 'manual')
+        self.iio_pluto_source_0.set_gain(0, gainp)
+        self.iio_pluto_source_0.set_quadrature(True)
+        self.iio_pluto_source_0.set_rfdc(True)
+        self.iio_pluto_source_0.set_bbdc(True)
+        self.iio_pluto_source_0.set_filter_params('Auto', '', 0, 0)
         self.iio_pluto_sink_1 = iio.fmcomms2_sink_fc32('ip:192.168.2.1' if 'ip:192.168.2.1' else iio.get_pluto_uri(), [True, True], 32768, False)
         self.iio_pluto_sink_1.set_len_tag_key('')
         self.iio_pluto_sink_1.set_bandwidth(20000000)
@@ -119,7 +113,7 @@ class xml_test(gr.top_block):
         self.connect((self.blocks_vector_to_stream_0_0, 0), (self.blocks_threshold_ff_0, 0))
         self.connect((self.blocks_vector_to_stream_0_0, 0), (self.network_tcp_sink_3, 0))
         self.connect((self.fft_vxx_0_0_0_1, 0), (self.blocks_complex_to_mag_0_0, 0))
-        self.connect((self.rtlsdr_source_0, 0), (self.analog_agc_xx_0_0, 0))
+        self.connect((self.iio_pluto_source_0, 0), (self.analog_agc_xx_0_0, 0))
 
 
     def get_f1p(self):
@@ -133,7 +127,7 @@ class xml_test(gr.top_block):
 
     def set_gainp(self, gainp):
         self.gainp = gainp
-        self.rtlsdr_source_0.set_gain(self.gainp, 0)
+        self.iio_pluto_source_0.set_gain(0, self.gainp)
 
     def get_lop(self):
         return self.lop
@@ -141,7 +135,7 @@ class xml_test(gr.top_block):
     def set_lop(self, lop):
         self.lop = lop
         self.iio_pluto_sink_1.set_frequency(self.lop)
-        self.rtlsdr_source_0.set_center_freq(self.lop, 0)
+        self.iio_pluto_source_0.set_frequency(self.lop)
 
     def get_rfp(self):
         return self.rfp
@@ -169,8 +163,7 @@ class xml_test(gr.top_block):
         self.samp_rate = samp_rate
         self.analog_sig_source_x_0_0.set_sampling_freq(self.samp_rate)
         self.iio_pluto_sink_1.set_samplerate(self.samp_rate)
-        self.rtlsdr_source_0.set_sample_rate(self.samp_rate)
-        self.rtlsdr_source_0.set_bandwidth(self.samp_rate, 0)
+        self.iio_pluto_source_0.set_samplerate(self.samp_rate)
 
     def get_fft_size(self):
         return self.fft_size
