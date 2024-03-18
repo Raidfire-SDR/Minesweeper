@@ -182,7 +182,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [856, 252.0]
+    coordinate: [856, 116.0]
     rotation: 0
     state: enabled
 - name: threshr
@@ -238,83 +238,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [536, 728.0]
-    rotation: 0
-    state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    ignoretag: 'True'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samples_per_second: samp_rate
-    type: complex
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [392, 348.0]
-    rotation: 0
-    state: enabled
-- name: blocks_throttle_1
-  id: blocks_throttle
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    ignoretag: 'True'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samples_per_second: samp_rate
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [256, 492.0]
-    rotation: 0
-    state: enabled
-- name: blocks_throttle_2
-  id: blocks_throttle
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    ignoretag: 'True'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samples_per_second: samp_rate
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [200, 724.0]
-    rotation: 0
-    state: enabled
-- name: blocks_throttle_3
-  id: blocks_throttle
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    ignoretag: 'True'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samples_per_second: samp_rate
-    type: complex
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [472, 412.0]
+    coordinate: [680, 744.0]
     rotation: 0
     state: enabled
 - name: epy_block_2_0
@@ -349,7 +273,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    freq: '1.0'
+    freq: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -359,7 +283,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 644.0]
+    coordinate: [224, 676.0]
     rotation: 0
     state: enabled
 - name: freq
@@ -379,10 +303,27 @@ blocks:
     coordinate: [176, 76.0]
     rotation: 0
     state: enabled
+- name: ip
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: str
+    value: 127.0.0.1
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [984, 716.0]
+    rotation: 0
+    state: true
 - name: network_tcp_source_0
   id: network_tcp_source
   parameters:
-    addr: 127.0.0.1
+    addr: ip
     affinity: ''
     alias: ''
     comment: ''
@@ -396,13 +337,13 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [184, 364.0]
+    coordinate: [184, 356.0]
     rotation: 0
     state: true
 - name: network_tcp_source_1
   id: network_tcp_source
   parameters:
-    addr: 127.0.0.1
+    addr: ip
     affinity: ''
     alias: ''
     comment: ''
@@ -422,7 +363,7 @@ blocks:
 - name: network_tcp_source_2
   id: network_tcp_source
   parameters:
-    addr: 127.0.0.1
+    addr: ip
     affinity: ''
     alias: ''
     comment: ''
@@ -438,11 +379,11 @@ blocks:
     bus_structure: null
     coordinate: [24, 468.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: network_tcp_source_2_0
   id: network_tcp_source
   parameters:
-    addr: 127.0.0.1
+    addr: ip
     affinity: ''
     alias: ''
     comment: ''
@@ -458,7 +399,7 @@ blocks:
     bus_structure: null
     coordinate: [24, 660.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: qtgui_number_sink_0
   id: qtgui_number_sink
   parameters:
@@ -519,7 +460,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [456, 484.0]
+    coordinate: [448, 484.0]
     rotation: 0
     state: enabled
 - name: qtgui_number_sink_1
@@ -584,7 +525,7 @@ blocks:
     bus_structure: null
     coordinate: [696, 628.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: qtgui_sink_x_0
   id: qtgui_sink_x
   parameters:
@@ -825,7 +766,7 @@ blocks:
 - name: xmlrpc_client_0_0_0_0
   id: xmlrpc_client
   parameters:
-    addr: localhost
+    addr: ip
     alias: ''
     callback: set_threshp
     comment: ''
@@ -867,21 +808,16 @@ blocks:
     bus_structure: null
     coordinate: [184, 164.0]
     rotation: 0
-    state: true
+    state: enabled
 
 connections:
-- [blocks_throttle_0, '0', qtgui_time_sink_x_0, '0']
-- [blocks_throttle_1, '0', qtgui_number_sink_0, '0']
-- [blocks_throttle_1, '0', qtgui_sink_x_0, '0']
-- [blocks_throttle_2, '0', epy_block_2_0, '0']
-- [blocks_throttle_3, '0', qtgui_time_sink_x_0, '1']
 - [epy_block_2_0, '0', blocks_null_sink_0, '0']
 - [epy_block_2_0, '0', qtgui_number_sink_1, '0']
-- [network_tcp_source_0, '0', blocks_throttle_3, '0']
-- [network_tcp_source_1, '0', blocks_throttle_0, '0']
-- [network_tcp_source_2, '0', blocks_throttle_1, '0']
+- [network_tcp_source_0, '0', qtgui_time_sink_x_0, '1']
+- [network_tcp_source_1, '0', qtgui_time_sink_x_0, '0']
+- [network_tcp_source_2, '0', qtgui_number_sink_0, '0']
 - [network_tcp_source_2, '0', qtgui_time_raster_sink_x_0, '0']
-- [network_tcp_source_2_0, '0', blocks_throttle_2, '0']
+- [network_tcp_source_2_0, '0', epy_block_2_0, '0']
 
 metadata:
   file_format: 1

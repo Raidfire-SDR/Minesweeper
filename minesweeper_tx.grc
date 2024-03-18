@@ -42,7 +42,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [96, 140.0]
+    coordinate: [104, 148.0]
     rotation: 0
     state: enabled
 - name: fft_size
@@ -109,14 +109,114 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '2000000'
+    value: "#!/usr/bin/env python3\r\n# -*- coding: utf-8 -*-\r\n\r\n#\r\n# SPDX-License-Identifier:\
+      \ GPL-3.0\r\n#\r\n# GNU Radio Python Flow Graph\r\n# Title: Not titled yet\r\
+      \n# Author: raidfire\r\n# GNU Radio version: 3.10.4.0\r\n\r\nfrom gnuradio import\
+      \ analog\r\nfrom gnuradio import blocks\r\nfrom gnuradio import fft\r\nfrom\
+      \ gnuradio.fft import window\r\nfrom gnuradio import gr\r\nfrom gnuradio.filter\
+      \ import firdes\r\nimport sys\r\nimport signal\r\nfrom argparse import ArgumentParser\r\
+      \nfrom gnuradio.eng_arg import eng_float, intx\r\nfrom gnuradio import eng_notation\r\
+      \nfrom gnuradio import iio\r\nfrom gnuradio import network\r\nfrom xmlrpc.server\
+      \ import SimpleXMLRPCServer\r\nimport threading\r\n\r\n\r\n\r\n\r\nclass xml_test(gr.top_block):\r\
+      \n\r\n    def __init__(self, f1p=131001, gainp=0, lop=4200000000, rfp=0, testp='0',\
+      \ threshp=0):\r\n        gr.top_block.__init__(self, \"Not titled yet\", catch_exceptions=True)\r\
+      \n\r\n        ##################################################\r\n       \
+      \ # Parameters\r\n        ##################################################\r\
+      \n        self.f1p = f1p\r\n        self.gainp = gainp\r\n        self.lop =\
+      \ lop\r\n        self.rfp = rfp\r\n        self.testp = testp\r\n        self.threshp\
+      \ = threshp\r\n\r\n        ##################################################\r\
+      \n        # Variables\r\n        ##################################################\r\
+      \n        self.samp_rate = samp_rate = 2000000\r\n        self.fft_size = fft_size\
+      \ = 512\r\n        self.decim = decim = 1024\r\n\r\n        ##################################################\r\
+      \n        # Blocks\r\n        ##################################################\r\
+      \n        self.xmlrpc_server_0 = SimpleXMLRPCServer(('127.0.0.1', 6005), allow_none=True)\r\
+      \n        self.xmlrpc_server_0.register_instance(self)\r\n        self.xmlrpc_server_0_thread\
+      \ = threading.Thread(target=self.xmlrpc_server_0.serve_forever)\r\n        self.xmlrpc_server_0_thread.daemon\
+      \ = True\r\n        self.xmlrpc_server_0_thread.start()\r\n        self.network_tcp_sink_3\
+      \ = network.tcp_sink(gr.sizeof_float, 1, '127.0.0.1', 6001,2)\r\n        self.iio_pluto_source_0\
+      \ = iio.fmcomms2_source_fc32('ip:192.168.2.1' if 'ip:192.168.2.1' else iio.get_pluto_uri(),\
+      \ [True, True], 32768)\r\n        self.iio_pluto_source_0.set_len_tag_key('packet_len')\r\
+      \n        self.iio_pluto_source_0.set_frequency(lop)\r\n        self.iio_pluto_source_0.set_samplerate(samp_rate)\r\
+      \n        self.iio_pluto_source_0.set_gain_mode(0, 'manual')\r\n        self.iio_pluto_source_0.set_gain(0,\
+      \ gainp)\r\n        self.iio_pluto_source_0.set_quadrature(True)\r\n       \
+      \ self.iio_pluto_source_0.set_rfdc(True)\r\n        self.iio_pluto_source_0.set_bbdc(True)\r\
+      \n        self.iio_pluto_source_0.set_filter_params('Auto', '', 0, 0)\r\n  \
+      \      self.iio_pluto_sink_1 = iio.fmcomms2_sink_fc32('ip:192.168.2.1' if 'ip:192.168.2.1'\
+      \ else iio.get_pluto_uri(), [True, True], 32768, False)\r\n        self.iio_pluto_sink_1.set_len_tag_key('')\r\
+      \n        self.iio_pluto_sink_1.set_bandwidth(20000000)\r\n        self.iio_pluto_sink_1.set_frequency(lop)\r\
+      \n        self.iio_pluto_sink_1.set_samplerate(samp_rate)\r\n        self.iio_pluto_sink_1.set_attenuation(0,\
+      \ 0)\r\n        self.iio_pluto_sink_1.set_filter_params('Auto', '', 0, 0)\r\n\
+      \        self.fft_vxx_0_0_0_1 = fft.fft_vcc(fft_size, True, window.blackmanharris(fft_size),\
+      \ False, 8)\r\n        self.blocks_vector_to_stream_0_0 = blocks.vector_to_stream(gr.sizeof_float*1,\
+      \ fft_size)\r\n        self.blocks_throttle_0 = blocks.throttle(gr.sizeof_float*1,\
+      \ samp_rate,True)\r\n        self.blocks_stream_to_vector_0_1 = blocks.stream_to_vector(gr.sizeof_gr_complex*1,\
+      \ fft_size)\r\n        self.blocks_multiply_conjugate_cc_0 = blocks.multiply_conjugate_cc(1)\r\
+      \n        self.blocks_complex_to_mag_0_0 = blocks.complex_to_mag(fft_size)\r\
+      \n        self.analog_sig_source_x_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE,\
+      \ 10000, 1, 0.01, 0)\r\n        self.analog_agc_xx_0_0 = analog.agc_cc((1e-4),\
+      \ 1.0, 1.0)\r\n        self.analog_agc_xx_0_0.set_max_gain(65536)\r\n      \
+      \  self.analog_agc_xx_0 = analog.agc_cc((1e-4), 1.0, 1.0)\r\n        self.analog_agc_xx_0.set_max_gain(65536)\r\
+      \n\r\n\r\n        ##################################################\r\n   \
+      \     # Connections\r\n        ##################################################\r\
+      \n        self.connect((self.analog_agc_xx_0, 0), (self.blocks_multiply_conjugate_cc_0,\
+      \ 0))\r\n        self.connect((self.analog_agc_xx_0_0, 0), (self.blocks_multiply_conjugate_cc_0,\
+      \ 1))\r\n        self.connect((self.analog_sig_source_x_0_0, 0), (self.analog_agc_xx_0,\
+      \ 0))\r\n        self.connect((self.analog_sig_source_x_0_0, 0), (self.iio_pluto_sink_1,\
+      \ 0))\r\n        self.connect((self.blocks_complex_to_mag_0_0, 0), (self.blocks_vector_to_stream_0_0,\
+      \ 0))\r\n        self.connect((self.blocks_multiply_conjugate_cc_0, 0), (self.blocks_stream_to_vector_0_1,\
+      \ 0))\r\n        self.connect((self.blocks_stream_to_vector_0_1, 0), (self.fft_vxx_0_0_0_1,\
+      \ 0))\r\n        self.connect((self.blocks_throttle_0, 0), (self.network_tcp_sink_3,\
+      \ 0))\r\n        self.connect((self.blocks_vector_to_stream_0_0, 0), (self.blocks_throttle_0,\
+      \ 0))\r\n        self.connect((self.fft_vxx_0_0_0_1, 0), (self.blocks_complex_to_mag_0_0,\
+      \ 0))\r\n        self.connect((self.iio_pluto_source_0, 0), (self.analog_agc_xx_0_0,\
+      \ 0))\r\n\r\n\r\n    def get_f1p(self):\r\n        return self.f1p\r\n\r\n \
+      \   def set_f1p(self, f1p):\r\n        self.f1p = f1p\r\n\r\n    def get_gainp(self):\r\
+      \n        return self.gainp\r\n\r\n    def set_gainp(self, gainp):\r\n     \
+      \   self.gainp = gainp\r\n        self.iio_pluto_source_0.set_gain(0, self.gainp)\r\
+      \n\r\n    def get_lop(self):\r\n        return self.lop\r\n\r\n    def set_lop(self,\
+      \ lop):\r\n        self.lop = lop\r\n        self.iio_pluto_sink_1.set_frequency(self.lop)\r\
+      \n        self.iio_pluto_source_0.set_frequency(self.lop)\r\n\r\n    def get_rfp(self):\r\
+      \n        return self.rfp\r\n\r\n    def set_rfp(self, rfp):\r\n        self.rfp\
+      \ = rfp\r\n\r\n    def get_testp(self):\r\n        return self.testp\r\n\r\n\
+      \    def set_testp(self, testp):\r\n        self.testp = testp\r\n\r\n    def\
+      \ get_threshp(self):\r\n        return self.threshp\r\n\r\n    def set_threshp(self,\
+      \ threshp):\r\n        self.threshp = threshp\r\n\r\n    def get_samp_rate(self):\r\
+      \n        return self.samp_rate\r\n\r\n    def set_samp_rate(self, samp_rate):\r\
+      \n        self.samp_rate = samp_rate\r\n        self.analog_sig_source_x_0_0.set_sampling_freq(self.samp_rate)\r\
+      \n        self.blocks_throttle_0.set_sample_rate(self.samp_rate)\r\n       \
+      \ self.iio_pluto_sink_1.set_samplerate(self.samp_rate)\r\n        self.iio_pluto_source_0.set_samplerate(self.samp_rate)\r\
+      \n\r\n    def get_fft_size(self):\r\n        return self.fft_size\r\n\r\n  \
+      \  def set_fft_size(self, fft_size):\r\n        self.fft_size = fft_size\r\n\
+      \r\n    def get_decim(self):\r\n        return self.decim\r\n\r\n    def set_decim(self,\
+      \ decim):\r\n        self.decim = decim\r\n\r\n\r\n\r\ndef argument_parser():\r\
+      \n    parser = ArgumentParser()\r\n    parser.add_argument(\r\n        \"--f1p\"\
+      , dest=\"f1p\", type=eng_float, default=eng_notation.num_to_str(float(131001)),\r\
+      \n        help=\"Set f1p [default=%(default)r]\")\r\n    parser.add_argument(\r\
+      \n        \"--gainp\", dest=\"gainp\", type=intx, default=0,\r\n        help=\"\
+      Set gainp [default=%(default)r]\")\r\n    parser.add_argument(\r\n        \"\
+      --lop\", dest=\"lop\", type=intx, default=4200000000,\r\n        help=\"Set\
+      \ lop [default=%(default)r]\")\r\n    parser.add_argument(\r\n        \"--rfp\"\
+      , dest=\"rfp\", type=intx, default=0,\r\n        help=\"Set rfp [default=%(default)r]\"\
+      )\r\n    parser.add_argument(\r\n        \"--testp\", dest=\"testp\", type=str,\
+      \ default='0',\r\n        help=\"Set testp [default=%(default)r]\")\r\n    parser.add_argument(\r\
+      \n        \"--threshp\", dest=\"threshp\", type=intx, default=0,\r\n       \
+      \ help=\"Set threshp [default=%(default)r]\")\r\n    return parser\r\n\r\n\r\
+      \ndef main(top_block_cls=xml_test, options=None):\r\n    if options is None:\r\
+      \n        options = argument_parser().parse_args()\r\n    tb = top_block_cls(f1p=options.f1p,\
+      \ gainp=options.gainp, lop=options.lop, rfp=options.rfp, testp=options.testp,\
+      \ threshp=options.threshp)\r\n\r\n    def sig_handler(sig=None, frame=None):\r\
+      \n        tb.stop()\r\n        tb.wait()\r\n\r\n        sys.exit(0)\r\n\r\n\
+      \    signal.signal(signal.SIGINT, sig_handler)\r\n    signal.signal(signal.SIGTERM,\
+      \ sig_handler)\r\n\r\n    tb.start()\r\n\r\n    try:\r\n        input('Press\
+      \ Enter to quit: ')\r\n    except EOFError:\r\n        pass\r\n    tb.stop()\r\
+      \n    tb.wait()\r\n\r\n\r\nif __name__ == '__main__':\r\n    main()"
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 220.0]
+    coordinate: [32, 220.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: test
   id: variable_qtgui_label
   parameters:
@@ -147,6 +247,22 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [912, 12.0]
+    rotation: 0
+    state: disabled
+- name: variable_qtgui_label_0
+  id: variable_qtgui_label
+  parameters:
+    comment: ''
+    formatter: None
+    gui_hint: ''
+    label: ''
+    type: int
+    value: threshp
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [944, 312.0]
     rotation: 0
     state: disabled
 - name: analog_agc_xx_0
@@ -226,7 +342,7 @@ blocks:
     bus_structure: null
     coordinate: [784, 788.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_multiply_conjugate_cc_0
   id: blocks_multiply_conjugate_cc
   parameters:
@@ -260,7 +376,7 @@ blocks:
     bus_structure: null
     coordinate: [336, 776.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_threshold_ff_0
   id: blocks_threshold_ff
   parameters:
@@ -276,9 +392,28 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1008, 660.0]
+    coordinate: [1040, 620.0]
     rotation: 0
-    state: enabled
+    state: disabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1032, 844.0]
+    rotation: 0
+    state: disabled
 - name: blocks_vector_to_stream_0_0
   id: blocks_vector_to_stream
   parameters:
@@ -294,9 +429,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [952, 776.0]
+    coordinate: [976, 760.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: f1p
   id: parameter
   parameters:
@@ -311,7 +446,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [176, 252.0]
+    coordinate: [16, 276.0]
     rotation: 0
     state: true
 - name: fft_vxx_0_0_0_1
@@ -334,7 +469,7 @@ blocks:
     bus_structure: null
     coordinate: [520, 740.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: gainp
   id: parameter
   parameters:
@@ -401,7 +536,38 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [560, 212.0]
+    coordinate: [560, 172.0]
+    rotation: 0
+    state: true
+- name: iio_pluto_source_0
+  id: iio_pluto_source
+  parameters:
+    affinity: ''
+    alias: ''
+    bandwidth: '20000000'
+    bbdc: 'True'
+    buffer_size: '32768'
+    comment: ''
+    filter: ''
+    filter_source: '''Auto'''
+    fpass: '0'
+    frequency: lop
+    fstop: '0'
+    gain1: '''manual'''
+    len_tag_key: packet_len
+    manual_gain1: gainp
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    quadrature: 'True'
+    rfdc: 'True'
+    samplerate: samp_rate
+    type: fc32
+    uri: ip:192.168.2.1
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [232, 324.0]
     rotation: 0
     state: true
 - name: lop
@@ -436,9 +602,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [888, 380.0]
+    coordinate: [968, 388.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: network_tcp_sink_1
   id: network_tcp_sink
   parameters:
@@ -456,7 +622,7 @@ blocks:
     bus_structure: null
     coordinate: [904, 524.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: network_tcp_sink_2
   id: network_tcp_sink
   parameters:
@@ -474,7 +640,7 @@ blocks:
     bus_structure: null
     coordinate: [1216, 652.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: network_tcp_sink_3
   id: network_tcp_sink
   parameters:
@@ -484,13 +650,13 @@ blocks:
     comment: ''
     mode: '2'
     port: '6001'
-    type: float
+    type: complex
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1128, 812.0]
+    coordinate: [1184, 780.0]
     rotation: 0
     state: true
 - name: osmosdr_sink_0
@@ -1127,7 +1293,24 @@ blocks:
     bus_structure: null
     coordinate: [72, 372.0]
     rotation: 0
-    state: enabled
+    state: disabled
+- name: samp_rate
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: intx
+    value: '1000000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 336.0]
+    rotation: 0
+    state: true
 - name: testp
   id: parameter
   parameters:
@@ -1165,7 +1348,7 @@ blocks:
 - name: xmlrpc_server_0
   id: xmlrpc_server
   parameters:
-    addr: localhost
+    addr: 127.0.0.1
     alias: ''
     comment: ''
     port: '6005'
@@ -1179,7 +1362,7 @@ blocks:
 - name: xmlrpc_server_0_0
   id: xmlrpc_server
   parameters:
-    addr: localhost
+    addr: 192.168.1.103
     alias: ''
     comment: ''
     port: '6006'
@@ -1189,7 +1372,7 @@ blocks:
     bus_structure: null
     coordinate: [344, 100.0]
     rotation: 0
-    state: true
+    state: disabled
 
 connections:
 - [analog_agc_xx_0, '0', blocks_multiply_conjugate_cc_0, '0']
@@ -1202,11 +1385,14 @@ connections:
 - [analog_sig_source_x_0_0, '0', osmosdr_sink_0, '0']
 - [blocks_complex_to_mag_0_0, '0', blocks_vector_to_stream_0_0, '0']
 - [blocks_multiply_conjugate_cc_0, '0', blocks_stream_to_vector_0_1, '0']
+- [blocks_multiply_conjugate_cc_0, '0', network_tcp_sink_3, '0']
 - [blocks_stream_to_vector_0_1, '0', fft_vxx_0_0_0_1, '0']
 - [blocks_threshold_ff_0, '0', network_tcp_sink_2, '0']
+- [blocks_throttle_0, '0', network_tcp_sink_3, '0']
 - [blocks_vector_to_stream_0_0, '0', blocks_threshold_ff_0, '0']
-- [blocks_vector_to_stream_0_0, '0', network_tcp_sink_3, '0']
+- [blocks_vector_to_stream_0_0, '0', blocks_throttle_0, '0']
 - [fft_vxx_0_0_0_1, '0', blocks_complex_to_mag_0_0, '0']
+- [iio_pluto_source_0, '0', analog_agc_xx_0_0, '0']
 - [rtlsdr_source_0, '0', analog_agc_xx_0_0, '0']
 
 metadata:
