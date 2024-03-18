@@ -183,7 +183,7 @@ def argument_parser():
         "--rfp", dest="rfp", type=intx, default=0,
         help="Set rfp [default=%(default)r]")
     parser.add_argument(
-        "--samp-rate", dest="samp_rate", type=eng_float, default=eng_notation.num_to_str(float(1000000)),
+        "--samp-rate", dest="samp_rate", type=intx, default=1000000,
         help="Set samp_rate [default=%(default)r]")
     parser.add_argument(
         "--testp", dest="testp", type=str, default='0',
