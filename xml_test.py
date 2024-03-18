@@ -78,6 +78,7 @@ class xml_test(gr.top_block):
         self.iio_pluto_sink_1.set_filter_params('Auto', '', 0, 0)
         self.fft_vxx_0_0_0_1 = fft.fft_vcc(fft_size, True, window.blackmanharris(fft_size), False, 8)
         self.blocks_vector_to_stream_0_0 = blocks.vector_to_stream(gr.sizeof_float*1, fft_size)
+        self.blocks_throttle_0 = blocks.throttle(gr.sizeof_float*1, samp_rate,True)
         self.blocks_stream_to_vector_0_1 = blocks.stream_to_vector(gr.sizeof_gr_complex*1, fft_size)
         self.blocks_multiply_conjugate_cc_0 = blocks.multiply_conjugate_cc(1)
         self.blocks_complex_to_mag_0_0 = blocks.complex_to_mag(fft_size)
@@ -98,7 +99,8 @@ class xml_test(gr.top_block):
         self.connect((self.blocks_complex_to_mag_0_0, 0), (self.blocks_vector_to_stream_0_0, 0))
         self.connect((self.blocks_multiply_conjugate_cc_0, 0), (self.blocks_stream_to_vector_0_1, 0))
         self.connect((self.blocks_stream_to_vector_0_1, 0), (self.fft_vxx_0_0_0_1, 0))
-        self.connect((self.blocks_vector_to_stream_0_0, 0), (self.network_tcp_sink_3, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.network_tcp_sink_3, 0))
+        self.connect((self.blocks_vector_to_stream_0_0, 0), (self.blocks_throttle_0, 0))
         self.connect((self.fft_vxx_0_0_0_1, 0), (self.blocks_complex_to_mag_0_0, 0))
         self.connect((self.iio_pluto_source_0, 0), (self.analog_agc_xx_0_0, 0))
 
@@ -148,6 +150,7 @@ class xml_test(gr.top_block):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.analog_sig_source_x_0_0.set_sampling_freq(self.samp_rate)
+        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
         self.iio_pluto_sink_1.set_samplerate(self.samp_rate)
         self.iio_pluto_source_0.set_samplerate(self.samp_rate)
 
