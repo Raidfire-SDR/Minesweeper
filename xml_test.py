@@ -30,7 +30,7 @@ import threading
 
 class xml_test(gr.top_block):
 
-    def __init__(self, f1p=131001, gainp=0, lop=4200000000, rfp=0, testp='0', threshp=0):
+    def __init__(self, f1p=131001, gainp=0, lop=4200000000, rfp=0, samp_rate=1000000, testp='0', threshp=0):
         gr.top_block.__init__(self, "Not titled yet", catch_exceptions=True)
 
         ##################################################
@@ -40,13 +40,13 @@ class xml_test(gr.top_block):
         self.gainp = gainp
         self.lop = lop
         self.rfp = rfp
+        self.samp_rate = samp_rate
         self.testp = testp
         self.threshp = threshp
 
         ##################################################
         # Variables
         ##################################################
-        self.samp_rate = samp_rate = 2000000
         self.fft_size = fft_size = 512
         self.decim = decim = 1024
 
@@ -132,6 +132,16 @@ class xml_test(gr.top_block):
     def set_rfp(self, rfp):
         self.rfp = rfp
 
+    def get_samp_rate(self):
+        return self.samp_rate
+
+    def set_samp_rate(self, samp_rate):
+        self.samp_rate = samp_rate
+        self.analog_sig_source_x_0_0.set_sampling_freq(self.samp_rate)
+        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
+        self.iio_pluto_sink_1.set_samplerate(self.samp_rate)
+        self.iio_pluto_source_0.set_samplerate(self.samp_rate)
+
     def get_testp(self):
         return self.testp
 
@@ -143,16 +153,6 @@ class xml_test(gr.top_block):
 
     def set_threshp(self, threshp):
         self.threshp = threshp
-
-    def get_samp_rate(self):
-        return self.samp_rate
-
-    def set_samp_rate(self, samp_rate):
-        self.samp_rate = samp_rate
-        self.analog_sig_source_x_0_0.set_sampling_freq(self.samp_rate)
-        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
-        self.iio_pluto_sink_1.set_samplerate(self.samp_rate)
-        self.iio_pluto_source_0.set_samplerate(self.samp_rate)
 
     def get_fft_size(self):
         return self.fft_size
@@ -183,6 +183,9 @@ def argument_parser():
         "--rfp", dest="rfp", type=intx, default=0,
         help="Set rfp [default=%(default)r]")
     parser.add_argument(
+        "--samp-rate", dest="samp_rate", type=eng_float, default=eng_notation.num_to_str(float(1000000)),
+        help="Set samp_rate [default=%(default)r]")
+    parser.add_argument(
         "--testp", dest="testp", type=str, default='0',
         help="Set testp [default=%(default)r]")
     parser.add_argument(
@@ -194,7 +197,7 @@ def argument_parser():
 def main(top_block_cls=xml_test, options=None):
     if options is None:
         options = argument_parser().parse_args()
-    tb = top_block_cls(f1p=options.f1p, gainp=options.gainp, lop=options.lop, rfp=options.rfp, testp=options.testp, threshp=options.threshp)
+    tb = top_block_cls(f1p=options.f1p, gainp=options.gainp, lop=options.lop, rfp=options.rfp, samp_rate=options.samp_rate, testp=options.testp, threshp=options.threshp)
 
     def sig_handler(sig=None, frame=None):
         tb.stop()
