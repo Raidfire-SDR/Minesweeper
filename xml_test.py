@@ -53,12 +53,7 @@ class xml_test(gr.top_block):
         ##################################################
         # Blocks
         ##################################################
-        self.xmlrpc_server_0_0 = SimpleXMLRPCServer(('localhost', 6006), allow_none=True)
-        self.xmlrpc_server_0_0.register_instance(self)
-        self.xmlrpc_server_0_0_thread = threading.Thread(target=self.xmlrpc_server_0_0.serve_forever)
-        self.xmlrpc_server_0_0_thread.daemon = True
-        self.xmlrpc_server_0_0_thread.start()
-        self.xmlrpc_server_0 = SimpleXMLRPCServer(('localhost', 6005), allow_none=True)
+        self.xmlrpc_server_0 = SimpleXMLRPCServer(('192.168.1.103', 6005), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
         self.xmlrpc_server_0_thread.daemon = True
