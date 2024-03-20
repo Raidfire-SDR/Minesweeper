@@ -54,7 +54,7 @@ class radar_rx(gr.top_block):
         ##################################################
         # Blocks
         ##################################################
-        self.xmlrpc_server_0 = SimpleXMLRPCServer(('192.168.1.104', 6005), allow_none=True)
+        self.xmlrpc_server_0 = SimpleXMLRPCServer(('192.168.1.105', 6005), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
         self.xmlrpc_server_0_thread.daemon = True

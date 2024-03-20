@@ -1373,7 +1373,7 @@ blocks:
 - name: xmlrpc_server_0
   id: xmlrpc_server
   parameters:
-    addr: 192.168.1.104
+    addr: 192.168.1.105
     alias: ''
     comment: ''
     port: '6005'
