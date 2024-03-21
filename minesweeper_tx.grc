@@ -11,7 +11,7 @@ options:
     gen_linking: dynamic
     generate_options: no_gui
     hier_block_src_path: '.:'
-    id: radar_tx
+    id: radar_rx
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -22,7 +22,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Radar Tx
+    title: Radar Rx
     window_size: (1000,1000)
   states:
     bus_sink: false
@@ -359,6 +359,23 @@ blocks:
     coordinate: [744, 448.0]
     rotation: 0
     state: enabled
+- name: blocks_null_sink_0
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1336, 512.0]
+    rotation: 0
+    state: true
 - name: blocks_stream_to_vector_0_1
   id: blocks_stream_to_vector
   parameters:
@@ -432,6 +449,76 @@ blocks:
     coordinate: [976, 760.0]
     rotation: 0
     state: enabled
+- name: epy_block_2_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\nfrom gnuradio import gr\n\
+      import numpy as np\nfrom PyQt5 import Qt\nfrom gnuradio import eng_notation\n\
+      from gnuradio import qtgui\nfrom gnuradio.filter import firdes\nimport sip\n\
+      from gnuradio import analog\n\nfrom gnuradio.fft import window\nimport sys\n\
+      import signal\nfrom argparse import ArgumentParser\nfrom gnuradio.eng_arg import\
+      \ eng_float, intx\nfrom xmlrpc.client import ServerProxy\nimport threading\n\
+      \n\nclass blk(gr.sync_block):  # other base classes are basic_block, decim_block,\
+      \ interp_block\n    \"\"\"Embedded Python Block example - a simple multiply\
+      \ const\"\"\"\n\n    def __init__(self, freq='Initialising'):  # only default\
+      \ arguments here\n        \"\"\"arguments to this function show up as parameters\
+      \ in GRC\"\"\"\n        gr.sync_block.__init__(\n            self,\n       \
+      \     name='Trigger Test2',   # will show up in GRC\n            in_sig=[np.float32],\n\
+      \            out_sig=[np.float32]\n        )\n        self.freq = freq\n\n \
+      \       self.xmlrpc_client_0 = ServerProxy('http://'+'localhost'+':8080')  \
+      \  \n\n    def get_freq(self):\n        return self.freq\n\n    def set_freq(self,\
+      \ freq):\n        self.freq = freq\n\n    def work(self, input_items, output_items):\n\
+      \n        output_items[0][:]=input_items[0]\n        var=(output_items[0])\n\
+      \        state0 ='No Target Detected'\n        state1= 'Target Detected'\n \
+      \       state=''\n        if(any(var)==True):\n            state=state1\n  \
+      \          self.freq=state1\n           # playsound.playsound('1.mp3')\n   \
+      \     if(any(var)==False):\n            state=state0\n            self.freq=state0\n\
+      \            #pysine.sine(frequency=440.0, duration=1.0)\n        self.xmlrpc_client_0.set_freq(self.freq)\n\
+      \        return len(input_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    freq: '1.0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Trigger Test2', 'blk', [('freq', "'Initialising'")], [('0', 'float',
+      1)], [('0', 'float', 1)], 'Embedded Python Block example - a simple multiply
+      const', ['freq'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1224, 572.0]
+    rotation: 0
+    state: enabled
+- name: epy_module_0
+  id: epy_module
+  parameters:
+    alias: ''
+    comment: ''
+    source_code: '# this module will be imported in the into your flowgraph
+
+      import RPi.GPIO as GPIO
+
+      GPIO.setmode(GPIO.BOARD)
+
+      GPIO.setup(12, GPIO.OUT)
+
+
+      GPIO.output(18, 1)
+
+
+      '
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [552, 488.0]
+    rotation: 0
+    state: true
 - name: f1p
   id: parameter
   parameters:
@@ -568,31 +655,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [232, 324.0]
-    rotation: 0
-    state: true
-- name: led_on
-  id: epy_module
-  parameters:
-    alias: ''
-    comment: ''
-    source_code: '# this module will be imported in the into your flowgraph
-
-      import RPi.GPIO as GPIO
-
-      GPIO.setmode(GPIO.BOARD)
-
-      GPIO.setup(18, GPIO.OUT)
-
-
-      GPIO.output(18, 1)
-
-
-      '
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [552, 488.0]
     rotation: 0
     state: true
 - name: lop
@@ -1373,7 +1435,7 @@ blocks:
 - name: xmlrpc_server_0
   id: xmlrpc_server
   parameters:
-    addr: 192.168.1.105
+    addr: 192.168.1.104
     alias: ''
     comment: ''
     port: '6005'
@@ -1411,10 +1473,12 @@ connections:
 - [blocks_complex_to_mag_0_0, '0', blocks_vector_to_stream_0_0, '0']
 - [blocks_multiply_conjugate_cc_0, '0', blocks_stream_to_vector_0_1, '0']
 - [blocks_stream_to_vector_0_1, '0', fft_vxx_0_0_0_1, '0']
+- [blocks_threshold_ff_0, '0', epy_block_2_0, '0']
 - [blocks_threshold_ff_0, '0', network_tcp_sink_2, '0']
 - [blocks_throttle_0, '0', network_tcp_sink_3, '0']
 - [blocks_vector_to_stream_0_0, '0', blocks_threshold_ff_0, '0']
 - [blocks_vector_to_stream_0_0, '0', blocks_throttle_0, '0']
+- [epy_block_2_0, '0', blocks_null_sink_0, '0']
 - [fft_vxx_0_0_0_1, '0', blocks_complex_to_mag_0_0, '0']
 - [iio_pluto_source_0, '0', analog_agc_xx_0_0, '0']
 - [rtlsdr_source_0, '0', analog_agc_xx_0_0, '0']
