@@ -494,31 +494,6 @@ blocks:
     coordinate: [1224, 572.0]
     rotation: 0
     state: enabled
-- name: epy_module_0
-  id: epy_module
-  parameters:
-    alias: ''
-    comment: ''
-    source_code: '# this module will be imported in the into your flowgraph
-
-      import RPi.GPIO as GPIO
-
-      GPIO.setmode(GPIO.BOARD)
-
-      GPIO.setup(12, GPIO.OUT)
-
-
-      GPIO.output(18, 1)
-
-
-      '
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [552, 488.0]
-    rotation: 0
-    state: true
 - name: f1p
   id: parameter
   parameters:
@@ -655,6 +630,30 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [232, 324.0]
+    rotation: 0
+    state: true
+- name: led_on
+  id: epy_module
+  parameters:
+    alias: ''
+    comment: ''
+    source_code: '# this module will be imported in the into your flowgraph
+
+      import RPi.GPIO as GPIO
+
+      GPIO.setmode(GPIO.BOARD)
+
+      GPIO.setup(18, GPIO.OUT)
+
+      GPIO.output(18, HIGH)
+
+
+      '
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1232, 452.0]
     rotation: 0
     state: true
 - name: lop

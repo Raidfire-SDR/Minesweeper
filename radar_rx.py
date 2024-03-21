@@ -25,7 +25,7 @@ from gnuradio import network
 from xmlrpc.server import SimpleXMLRPCServer
 import threading
 import radar_rx_epy_block_2_0 as epy_block_2_0  # embedded python block
-import radar_rx_epy_module_0 as epy_module_0  # embedded python module
+import radar_rx_led_on as led_on  # embedded python module
 
 
 
