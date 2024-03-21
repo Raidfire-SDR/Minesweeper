@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: Radar Rx
+# Title: Radar Tx
 # Author: raidfire
 # GNU Radio version: 3.10.4.0
 
@@ -24,15 +24,15 @@ from gnuradio import iio
 from gnuradio import network
 from xmlrpc.server import SimpleXMLRPCServer
 import threading
-import radar_rx_epy_module_0 as epy_module_0  # embedded python module
+import radar_tx_led_on as led_on  # embedded python module
 
 
 
 
-class radar_rx(gr.top_block):
+class radar_tx(gr.top_block):
 
     def __init__(self, f1p=131001, gainp=0, lop=4200000000, rfp=0, samp_rate=1000000, testp='0', threshp=0):
-        gr.top_block.__init__(self, "Radar Rx", catch_exceptions=True)
+        gr.top_block.__init__(self, "Radar Tx", catch_exceptions=True)
 
         ##################################################
         # Parameters
@@ -202,7 +202,7 @@ def argument_parser():
     return parser
 
 
-def main(top_block_cls=radar_rx, options=None):
+def main(top_block_cls=radar_tx, options=None):
     if options is None:
         options = argument_parser().parse_args()
     tb = top_block_cls(f1p=options.f1p, gainp=options.gainp, lop=options.lop, rfp=options.rfp, samp_rate=options.samp_rate, testp=options.testp, threshp=options.threshp)

@@ -11,7 +11,7 @@ options:
     gen_linking: dynamic
     generate_options: no_gui
     hier_block_src_path: '.:'
-    id: radar_rx
+    id: radar_tx
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -22,7 +22,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Radar Rx
+    title: Radar Tx
     window_size: (1000,1000)
   states:
     bus_sink: false
@@ -432,31 +432,6 @@ blocks:
     coordinate: [976, 760.0]
     rotation: 0
     state: enabled
-- name: epy_module_0
-  id: epy_module
-  parameters:
-    alias: ''
-    comment: ''
-    source_code: '# this module will be imported in the into your flowgraph
-
-      import RPi.GPIO as GPIO
-
-      GPIO.setmode(GPIO.BOARD)
-
-      GPIO.setup(18, GPIO.OUT)
-
-
-      GPIO.output(18, 1)
-
-
-      '
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [552, 488.0]
-    rotation: 0
-    state: true
 - name: f1p
   id: parameter
   parameters:
@@ -593,6 +568,31 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [232, 324.0]
+    rotation: 0
+    state: true
+- name: led_on
+  id: epy_module
+  parameters:
+    alias: ''
+    comment: ''
+    source_code: '# this module will be imported in the into your flowgraph
+
+      import RPi.GPIO as GPIO
+
+      GPIO.setmode(GPIO.BOARD)
+
+      GPIO.setup(18, GPIO.OUT)
+
+
+      GPIO.output(18, 1)
+
+
+      '
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [552, 488.0]
     rotation: 0
     state: true
 - name: lop
